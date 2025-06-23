@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
+import React from 'react';
 
 // Add Boxicons CSS dynamically if not already present
 const boxiconsLink = document.createElement('link');
@@ -10,7 +12,7 @@ if (!document.querySelector('link[href*="boxicons"]')) {
 // Hero component, now controlled by props from App.jsx
 function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing }) {
   const [isDragOver, setIsDragOver] = useState(false);
-
+  const { isAuthenticated } = useAuth0();
   // Handle drag over event
   const handleDragOver = (e) => {
     e.preventDefault(); // Prevent default to allow drop
@@ -27,7 +29,7 @@ function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragOver(false); // Reset drag over state
-    
+
     const files = e.dataTransfer.files; // Get files from drop event
     if (files[0]) {
       onFileUpload(files[0]); // Call the parent's file upload handler
@@ -42,6 +44,7 @@ function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing
   };
 
   return (
+
     <div className="py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
@@ -112,8 +115,8 @@ function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing
             <div
               className={`
                 relative p-8 rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer
-                ${isDragOver 
-                  ? 'border-gray-400 bg-gray-800/50' 
+                ${isDragOver
+                  ? 'border-gray-400 bg-gray-800/50'
                   : 'border-gray-600 bg-gray-800/20 hover:border-gray-500'
                 }
                 ${isProcessing ? 'border-gray-400 bg-gray-800/50' : ''}
@@ -143,11 +146,13 @@ function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing
                     {isDragOver ? 'Drop your file here' : 'Upload Your Chat Export'}
                   </h3>
                   <p className="text-white/60 mb-6">
-                    Drag & drop your file or click to browse
+                    {uploadProgress == 100
+                      ? "File uploaded successfully! Click on Proceed to Dashboard."
+                      : "Drag & drop your file or click to browse"}
                   </p>
 
                   <div className="flex justify-center space-x-4 text-xs text-white/50">
-                    <span>.txt files</span>
+                    <span>.txt file</span>
                   </div>
                 </div>
               ) : (
@@ -176,11 +181,10 @@ function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing
               <button
                 onClick={onProceedToDashboard} // Calls the parent's handler
                 disabled={uploadProgress < 100} // Button enabled only when upload is 100%
-                className={`px-8 py-3 font-semibold rounded-lg transition-all duration-300 ${
-                  uploadProgress >= 100
+                className={`px-8 py-3 font-semibold rounded-lg transition-all duration-300 ${uploadProgress >= 100
                     ? 'bg-purple-600 hover:bg-purple-500 text-white hover:shadow-lg hover:shadow-purple-500/30 cursor-pointer'
                     : 'bg-gray-600 text-gray-400 cursor-not-allowed' // Disabled styling
-                }`}
+                  }`}
               >
                 Proceed to Dashboard
               </button>
