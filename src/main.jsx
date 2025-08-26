@@ -6,8 +6,8 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
  <Auth0Provider
-    domain="dev-nzo8dam8t66m000i.us.auth0.com"
-    clientId="iLekHUUAgpZoi6Twfdmc4sCRsbhqbeHk"
+    domain={import.meta.env.VITE_AUTH0_DOMAIN}
+  clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
     authorizationParams={{
       redirect_uri: window.location.origin
     }}
