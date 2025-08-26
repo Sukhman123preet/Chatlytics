@@ -12,7 +12,7 @@ if (!document.querySelector('link[href*="boxicons"]')) {
 // Hero component, now controlled by props from App.jsx
 function Hero({ onFileUpload, onProceedToDashboard, uploadProgress, isProcessing }) {
   const [isDragOver, setIsDragOver] = useState(false);
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } =true;
   // Handle drag over event
   const handleDragOver = (e) => {
     e.preventDefault(); // Prevent default to allow drop

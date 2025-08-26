@@ -2,12 +2,11 @@ import React, { useState, useCallback } from 'react';
 import Navbar from './Navbar.jsx';
 import Hero from './Hero.jsx';
 import WhatsAppAnalyzer from './whatsAppAnalyzer.jsx';
-import { useAuth0 } from "@auth0/auth0-react";
 import toast, { Toaster } from 'react-hot-toast';
 
 
 function App() {
-  const { isAuthenticated} = useAuth0();
+  const { isAuthenticated} = true;
   // State to hold the processed chat data (array of message objects)
   const [chatData, setChatData] = useState(null);
   // State to control which main view is shown: upload (Hero) or analysis (WhatsAppAnalyzer)
@@ -87,11 +86,8 @@ function App() {
   // Callback function passed to Hero for the "Proceed to Dashboard" button.
   const handleProceedToDashboard = useCallback(() => {
     // Only allow proceeding if upload is 100% complete and chatData is available
-    if(!isAuthenticated) {
-      toast.error("Proceeding to dashboard requires log in or sign up.");
-      console.error("User is not authenticated.");
-    }
-    else if (uploadProgress === 100 && chatData) {
+    
+    if (uploadProgress === 100 && chatData) {
       setShowAnalyzer(true); // Switch to the analysis view
     }
     
