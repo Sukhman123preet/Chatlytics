@@ -105,7 +105,7 @@ function App() {
     <>
     <Toaster position="top-right" />
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 relative">
-      <Navbar /> {/* Your navigation bar */}
+      <Navbar  onBackToUpload={handleBackToUpload}/> {/* Your navigation bar */}
 
       {/* Conditional rendering: show Analyzer if showAnalyzer is true, otherwise show Hero */}
       {showAnalyzer ? (

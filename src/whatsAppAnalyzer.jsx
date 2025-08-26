@@ -85,24 +85,43 @@ function WhatsAppAnalyzer({ chatData, onBackToUpload }) {
   }, [extractEmojis, extractURLs]);
 
   // Function to determine the most active users for the "overall" view
-  const getMostActiveUsers = useCallback((data) => {
-    const userCounts = {};
-    data.forEach(item => {
-      userCounts[item.user] = (userCounts[item.user] || 0) + 1;
+ // Function to determine the most active users for the "overall" view
+const getMostActiveUsers = useCallback((data) => {
+  const userCounts = {};
+  data.forEach(item => {
+    userCounts[item.user] = (userCounts[item.user] || 0) + 1;
+  });
+
+  const totalMessages = data.length;
+
+  // Sort users by message count in descending order
+  const sortedUsers = Object.entries(userCounts)
+    .sort(([, a], [, b]) => b - a);
+
+  // Top 5 users only
+  const topUsers = sortedUsers.slice(0, 5);
+
+  // Remaining users count as "Others"
+  const othersCount = sortedUsers.slice(5).reduce((sum, [, count]) => sum + count, 0);
+
+  // Prepare final array with "Others"
+  const result = topUsers.map(([user, count]) => ({
+    user,
+    count,
+    percentage: ((count / totalMessages) * 100).toFixed(1)
+  }));
+
+  if (othersCount > 0) {
+    result.push({
+      user: "Others",
+      count: othersCount,
+      percentage: ((othersCount / totalMessages) * 100).toFixed(1)
     });
-    
-    // Sort users by message count in descending order
-    const sortedUsers = Object.entries(userCounts)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5); // Get top 5 active users
-    
-    const totalMessages = data.length;
-    return sortedUsers.map(([user, count]) => ({
-      user,
-      count,
-      percentage: ((count / totalMessages) * 100).toFixed(1) // Calculate percentage
-    }));
-  }, []);
+  }
+
+  return result;
+}, []);
+
 
   // Function to get quarterly message timeline
   const getQuarterlyTimeline = useCallback((user, data) => {
